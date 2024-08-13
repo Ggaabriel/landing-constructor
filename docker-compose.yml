@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend_files:/code/app/images
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    depends_on:
+      - mongo_backend
+  
+  mongo_backend:
+    image: mongo
+    volumes:
+      - mongo_backend_volume:/data/db
+
+volumes:
+  mongo_backend_volume:
+  backend_files:
