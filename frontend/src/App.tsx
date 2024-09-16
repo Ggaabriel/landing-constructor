@@ -14,11 +14,7 @@ import { useEffect } from "react";
 import { tg } from "./tg";
 import EditLogo from "./pages/EditLogo";
 import { useAppDispatch } from "./hooks/useAppDispatch";
-import {
-    getUserWithProjectsByIdThunk,
-    setUser,
-
-} from "./store/slice/UserSlice";
+import { getUserWithProjectsByIdThunk, setUser } from "./store/slice/UserSlice";
 import PageBackgroundEdit from "./pages/Background";
 import YourSite from "./pages/YourSite";
 import { getUserById, postUserById } from "./axios";
@@ -51,8 +47,8 @@ function App() {
                         last_name: `${tgUser.last_name}`,
                         birthday: "",
                         phone_number: "",
-                        bio:"",
-                        status:""
+                        bio: "",
+                        status: "",
                     });
                     const resp2 = await getUserById(`${tgUser.id}`); // Используйте await для ожидания результата getUser()
                     dispatch(setUser(await resp2.user));
@@ -63,8 +59,7 @@ function App() {
                 }
             }
         }
-       validUser()
-          
+        validUser();
     }, []);
 
     return (
@@ -72,115 +67,23 @@ function App() {
             <Home />
             <Routes>
                 <Route path="/" element={<></>} />
-                <Route
-                    path="/list/edit/"
-                    element={
-                        <Modal>
-                            <PageEdit />
-                        </Modal>
-                    }
-                />
-                <Route
-                    path="/blanks"
-                    element={
-                        <Modal>
-                            <PageBlanks />
-                        </Modal>
-                    }
-                />
-                <Route
-                    path="/blanks/:id/"
-                    element={
-                        <Modal>
-                            <PageBlanksItem />
-                        </Modal>
-                    }
-                />
-                <Route
-                    path="/list"
-                    element={
-                        <Modal>
-                            <PageProjects />
-                        </Modal>
-                    }
-                />
-                <Route
-                    path="/list/edit/text/:id"
-                    element={
-                        <Modal>
-                            <PageTextEdit />
-                        </Modal>
-                    }
-                />
-
-                <Route
-                    path="/list/edit/background/:id"
-                    element={
-                        <Modal>
-                            <PageBackgroundEdit />
-                        </Modal>
-                    }
-                />
-
-                <Route
-                    path="/yoursite/:id"
-                    element={
-                        <Modal>
-                            <YourSite />
-                        </Modal>
-                    }
-                />
-                <Route
-                    path="/list/logo/"
-                    element={
-                        <Modal>
-                            <EditLogo />
-                        </Modal>
-                    }   
-                />                 <Route
-                path="/profile/"
-                element={
-                    <Modal>
-                        <PageDefaultProfile />
-                    </Modal>
-                } />
-             
-                {/* <Route
-                    path="/gallery/"
-                    element={
-                        <Modal>
-                            <PageGallery />
-                        </Modal>
-                    }
-                />
- 
-
-
-
-               
-                <Route
-                    path="/gallery/"
-                    element={
-                        <Modal>
-                            <PageGallery />
-                        </Modal>
-                    }
-                />
- 
-
-                {/* 
-                <Route
-                    path="/gallery/"
-                    element={
-                        <Modal>
-                            <PageGallery />
-                        </Modal>
-                    }
-                />
-
-
- 
-                */}
+                <Route path="/" element={<Modal />}>
+                    <Route path="/list" element={<PageProjects />} />
+                    <Route path="/list/edit/" element={<PageEdit />} />
+                    <Route
+                        path="/list/edit/text/:id"
+                        element={<PageTextEdit />}
+                    />
+                    <Route
+                        path="/list/edit/background/:id"
+                        element={<PageBackgroundEdit />}
+                    />
+                    <Route path="/blanks" element={<PageBlanks />} />
+                    <Route path="/blanks/:id/" element={<PageBlanksItem />} />
+                    <Route path="/yoursite/:id" element={<YourSite />} />
+                    <Route path="/list/logo/" element={<EditLogo />} />{" "}
+                    <Route path="/profile/" element={<PageDefaultProfile />} />
+                </Route>
             </Routes>
         </>
     );

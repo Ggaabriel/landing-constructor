@@ -1,8 +1,7 @@
 import { FC, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import maskProject from "/maskProject.png";
-import ponart from '@/src/assets/photo_2023-10-13_21-35-06.jpg'
-import utki from '@/src/assets/photo_2023-10-13_21-35-25.jpg'
+import "./projects.css";
 import "swiper/css";
 import useLongPress from "@/src/hooks/useLongPress.ts";
 import { SelectedBlock } from "./SelectedBlock";
@@ -42,7 +41,29 @@ const Projects: FC<IProjectProps> = ({
 
     return (
         <>
-            {modalStatus && (
+
+            <Swiper
+             style={{ transform: 'none' }}
+                slidesPerView={"auto"}
+                spaceBetween={15}
+                className="mySwiper overflow-visible h-[50vh] pt-10"
+                centeredSlides={true}
+                onSlideChange={(e) => {
+                    setActiveIndex(e.realIndex);
+                    if (e.activeIndex + 1 == 0) e.slideTo(1);
+                    else if (e.activeIndex == e.slides.length - 1)
+                        e.slideTo(e.slides.length - 1);
+                }}
+                onActiveIndexChange={(e) => {
+                    setActiveIndex(e.realIndex);
+                    if (e.activeIndex + 1 == 0) e.slideTo(1);
+                    else if (e.activeIndex == e.slides.length - 1)
+                        e.slideTo(e.slides.length - 1);
+                }}
+                onInit={() => setActiveIndex(0)}
+                initialSlide={0}
+            >
+                            {modalStatus && (
                 <SelectedBlock
                     style={{
                         marginTop: selectedImageWidth
@@ -56,46 +77,23 @@ const Projects: FC<IProjectProps> = ({
                     setActiveSlide={setActiveSlide}
                 />
             )}
-            <Swiper
-                spaceBetween={15}
-                className="mySwiper container overflow-visible h-[50vh] pt-10"
-                slidesPerView={1.8}
-                centeredSlides={true}
-                onSlideChange={(e) => {
-                    setActiveIndex(e.realIndex);
-                    if (e.activeIndex + 1 == 0) e.slideTo(1);
-                    else if (e.activeIndex == e.slides.length - 1)
-                        e.slideTo(e.slides.length - 2);
-                }}
-                onActiveIndexChange={(e) => {
-                    setActiveIndex(e.realIndex);
-                    if (e.activeIndex + 1 == 0) e.slideTo(1);
-                    else if (e.activeIndex == e.slides.length - 1)
-                        e.slideTo(e.slides.length - 2);
-                }}
-                onInit={() => setActiveIndex(0)}
-                initialSlide={0}
-                breakpoints={{
-                    550: {
-                        slidesPerView: 1.2,
-                    },
-                }}
-            >
                 {projects.map((item: any, i: number) => {
                     return (
-                        <SwiperSlide key={i++} {...longPress} className="">
+                        <SwiperSlide
+                            key={i++}
+                            {...longPress}
+                            className="max-w-[225px]"
+                        >
                             <Link to={`/yoursite/${item.ID}`}>
                                 <div
                                     style={{
-                                        backgroundImage: i % 3 === 0 ? `url(${maskProject})` : i % 3 === 1 ? `url(${ponart})` : `url(${utki})`,
+                                        backgroundImage: `url(${maskProject})`,
                                         opacity:
                                             activeIndex === i && activeSlide
-                                                ? "0"
+                                                ? "50%"
                                                 : "100",
                                     }}
-                                    className={`w-full h-full transition-all duration-200 text-center background-position-centre bg-center ${
-                                        activeIndex === i ? "!scale-[1.1]" : ""
-                                    }`}
+                                    className={`w-full h-full transition-all duration-200 text-center background-position-centre bg-center`}
                                 >
                                     <span
                                         className={`text-black text-[24px] uppercase absolute -bottom-8 left-1/2 -translate-x-1/2 duration-200 -z-10`}
@@ -108,17 +106,17 @@ const Projects: FC<IProjectProps> = ({
                     );
                 })}
 
-                <SwiperSlide>
-                    <div
-                        className={`w-full h-[276px] transition-all duration-200 text-center flex items-center justify-center`}
+                <SwiperSlide className=" max-w-[225px] border-2">
+                    <Link
+                        to={"/blanks/1"}
+                        className="w-full h-full transition-all duration-200 text-center flex items-center justify-center"
                     >
-                        <Link
-                            to={"/blanks/1"}
-                            className="w-20 h-20 border border-black rounded-full flex items-center justify-center text-[48px] font-medium"
+                        <div
+                            className={` w-20 h-20 flex items-center justify-center text-[48px] font-medium`}
                         >
                             +
-                        </Link>
-                    </div>
+                        </div>
+                    </Link>
                 </SwiperSlide>
             </Swiper>
         </>

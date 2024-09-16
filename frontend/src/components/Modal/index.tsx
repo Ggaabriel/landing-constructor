@@ -3,9 +3,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import close from "../../assets/icons/close.svg";
 import backArr from "../../assets/icons/backArr.svg";
-import { IModalProps } from "./ModalInterface";
+import { Outlet } from "react-router-dom";
 
-const Modal: FC<IModalProps> = ({ children }) => {
+const Modal: FC = () => {
     let y: number | null = null;
     let x: number | null = null;
     const swipeThreshold = 5;
@@ -29,21 +29,15 @@ const Modal: FC<IModalProps> = ({ children }) => {
         if (Math.abs(xDiff) > Math.abs(yDiff)) {
             if (xDiff > 0) {
                 closeModal();
-            } else {
-
             }
         } else {
             if (yDiff > 0 && y < swipeThreshold) {
                 if (yDiff > swipeThreshold) {
                     // Пользователь свайпнул вверх в верхней части экрана
                     closeModal();
-
                 }
-            } else {
-
-            }
+            } 
         }
-
 
         x = null;
         y = null;
@@ -58,13 +52,14 @@ const Modal: FC<IModalProps> = ({ children }) => {
         const object = divRef.current;
 
         gsap.to(object, {
-            duration: 1,
-            y: "100%", // Конечная позиция за пределами экрана вверху
+            duration: 0.5,
+            opacity: 0,
+        
             ease: "power3.out", // Вид анимации
         });
         setTimeout(() => {
             navigate("/");
-        }, 1000);
+        }, 300);
     };
     // Функция для проверки количества слэшей в строке
     const [invested, setInvested] = useState(false);
@@ -74,8 +69,9 @@ const Modal: FC<IModalProps> = ({ children }) => {
     useEffect(() => {
         const object = divRef.current;
         gsap.from(object, {
-            duration: 1,
-            y: "100%", // Начальная позиция за пределами экрана внизу
+            duration: 0.5,
+            opacity: 0,
+          
             ease: "power3.out", // Вид анимации
         });
     }, []);
@@ -105,14 +101,14 @@ const Modal: FC<IModalProps> = ({ children }) => {
                 </button>
             ) : (
                 <button
-                    className="w-12 h-12 flex justify-center items-center absolute z-20"
+                    className="w-12 h-12 flex justify-center items-center absolute z-10"
                     onClick={() => closeModal()}
                 >
                     <img src={close} alt="close button" />
                 </button>
             )}
 
-            {children}
+            <Outlet />
         </div>
     );
 };

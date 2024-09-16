@@ -1,4 +1,3 @@
-import { CheckedButton } from "../../shared/Buttons/CheckedButton";
 import { Filter } from "../../shared/Filter";
 import { Projects } from "./Projects";
 import Loader from "@/src/shared/Loader";
@@ -68,12 +67,6 @@ const PageProjects = () => {
                             </div>
                         </div>
                     )}
-                </div>
-                <div className="container">
-                    <div className="max-w-[300px] mx-auto flex justify-between items-center pt-12">
-                        <span>Совместный доступ</span>
-                        <CheckedButton checked={true} setChecked={() => {}} />
-                    </div>
                 </div>
             </div>
         </>

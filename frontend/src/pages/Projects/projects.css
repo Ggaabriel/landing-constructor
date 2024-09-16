@@ -1,0 +1,57 @@
+.swiper-slide-active{
+  transform: scale(1.1) !important; 
+  z-index: 9999;
+  position: relative !important;
+  bottom: 0;
+}
+.swiper-slide{
+  transition: 150ms;
+}
+.swiper{
+  position: static !important;
+}
+.swiper-wrapper{
+  position: static !important ;
+  transform-style: flat !important;
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.carousel-wrapper {
+  position: relative;
+  display: flex;
+  width: 100%;
+  transition: left 0.5s ease-in-out;
+}
+
+.carousel-item {
+  position: absolute;
+  width: 100%;
+  transition: left 0.5s ease-in-out;
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.carousel-button.prev {
+  left: 10px;
+}
+
+.carousel-button.next {
+  right: 10px;
+}

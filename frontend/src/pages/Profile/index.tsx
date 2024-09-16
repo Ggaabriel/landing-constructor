@@ -4,7 +4,6 @@ import profileBg from "/profileBg.jpg";
 import { useAppSelector } from "@/src/hooks/useAppSelector";
 import { Filter } from "@/src/shared/Filter";
 import { InputDefault } from "@/src/shared/Inputs/InputDefault";
-import { Social } from "@/src/shared/Social";
 import { InputChecked } from "@/src/shared/Inputs/InputChecked";
 import { CheckedButton } from "@/src/shared/Buttons/CheckedButton";
 import { SubmitButton } from "@/src/shared/Buttons/SubmitButton";
@@ -93,12 +92,13 @@ const PageDefaultProfile = () => {
         <div className="h-full relative font-montserrat overflow-scroll pb-12">
             {/* АВАТАР ПОЛЬЗОВАТЕЛЯ */}
             {file === undefined ? (
-                <ProfileAvatar
-                    imgUser={`${import.meta.env.VITE_BASE_URL}/user/${user.telegramID}/image`}
-                    bgImg={profileBg}
-                    userFIO={`${user.first_name} ${user.last_name} `}
-                    userStatus={user.status}
-                />
+                // <ProfileAvatar
+                //     imgUser={`${import.meta.env.VITE_BASE_URL}/user/${user.telegramID}/image`}
+                //     bgImg={profileBg}
+                //     userFIO={`${user.first_name} ${user.last_name} `}
+                //     userStatus={user.status}
+                // />
+                <div></div>
             ) : (
                 images.map((imageData, index) => (
                     <ProfileAvatar
@@ -148,12 +148,12 @@ const PageDefaultProfile = () => {
                         />
                     </div>
 
-                    {visible.birthday ? (
+                    {/* {visible.birthday ? (
                         <div className="flex items-center justify-between pt-4 ">
                             <span>отображать пользователям</span>
                             <CheckedButton checked={false} />
                         </div>
-                    ) : null}
+                    ) : null} */}
                 </div>
                 <div className="pt-4 flex flex-col">
                     <div className="">
@@ -178,11 +178,11 @@ const PageDefaultProfile = () => {
                     ) : null}
                 </div>
                 <div className="pt-4">
-                    <Social
+                    {/* <Social
                         handleClick={() =>
                             setVisible({ ...visible, social: true })
                         }
-                    />
+                    /> */}
                     {visible.social ? (
                         <div className="pt-4">
                             <InputDefault

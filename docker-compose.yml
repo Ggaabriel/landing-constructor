@@ -21,6 +21,8 @@ services:
   
   mongo_backend:
     image: mongo
+    ports:
+      - "27017:27017"
     volumes:
       - mongo_backend_volume:/data/db
 
