@@ -8,6 +8,7 @@ import Loader from "@/src/shared/Loader";
 import { useAppDispatch } from "@/src/hooks/useAppDispatch";
 import { getTemplatesWithModulesByIdThunk } from "@/src/store/slice/EditSlice";
 import { useParams } from "react-router-dom";
+import Procedure_background from "@/src/forms/procedure_background";
 
 const FormHeadersParametrs: FC = () => {
     const [value, setValue] = useState({ nameModule: "", descrModule: "" });
@@ -41,13 +42,7 @@ const FormHeadersParametrs: FC = () => {
             text_align: align,
             text_color: textColor,
             background_type: "COLOR",
-            procedure_background: {
-                background_color: "#ffffff",
-                blur: 5,
-                color: "#000000",
-                count: 3,
-                speed: 2,
-            },
+            procedure_background: new Procedure_background({}),
         });
         setVisible(true);
     };

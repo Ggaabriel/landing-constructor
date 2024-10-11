@@ -35,12 +35,12 @@ const useDraggableBlock = ({
         const handleEnd = () => {
             setIsDragging(false);
             setPosition({ y: 0 });
-            if(!isInDropZone){
+            if(isInDropZone){
                 if (onDragEnd) {
                 onDragEnd();
               }
             }
-            if (!isInDropZone) {
+            if (isInDropZone) {
                 // Возвращаем блок в начальное положение
                 setPosition(initialPosition);
             }

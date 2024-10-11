@@ -4,7 +4,7 @@ import { useAppSelector } from "@/src/hooks/useAppSelector";
 import { getProjectWithTemplatesByIdThunk } from "@/src/store/slice/EditSlice";
 import { useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
-// import Header from "./Header";
+import Header from "./Header";
 
 const YourSite = () => {
     const dispatch = useAppDispatch();
@@ -25,7 +25,7 @@ const YourSite = () => {
     return (
         <>
             <button onClick={copy} className="p-2 bg-black text-white absolute bottom-0 right-0 z-10">Скопировать ссылку</button>
-            {/* <Header /> */}
+            <Header />
             <div className="h-screen overflow-y-scroll scroll-smooth">
                 {templates.length &&
                     templates.map((item: any, i) => (

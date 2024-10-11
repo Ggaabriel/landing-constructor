@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface openState {
     color: string;
-    background: string;
+    background_color: string;
     count: number;
     blur: number;
     speed: number;
@@ -11,7 +11,7 @@ export interface openState {
 
 const initialState: openState = {
     color: "white",
-    background: "gray",
+    background_color: "gray",
     count: 3,
     blur: 30,
     speed: 1,
@@ -26,7 +26,7 @@ export const protcedurSlice = createSlice({
             state.color = action.payload;
         },
         setBackground(state, action: PayloadAction<string>) {
-            state.background = action.payload;
+            state.background_color = action.payload;
         },
         setCount(state, action: PayloadAction<number>) {
             state.count = action.payload;

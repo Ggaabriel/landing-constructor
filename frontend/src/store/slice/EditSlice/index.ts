@@ -102,6 +102,8 @@ export const editSlice = createSlice({
     initialState,
     reducers: {
         setTemp(state, action) {
+            console.log(state.templates);
+            
             state.templates = action.payload;
         },
         setActiveId(state, action) {

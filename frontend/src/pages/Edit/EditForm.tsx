@@ -10,6 +10,7 @@ import useDraggableBlock from "@/src/hooks/useDragble";
 import { postModuleById, postTemplateById } from "@/src/axios";
 import { getProjectWithTemplatesByIdThunk } from "@/src/store/slice/EditSlice";
 import TwoBlockPreview from "@/src/shared/FormsPrev/TwoBlockPreview";
+import Procedure_background from "@/src/forms/procedure_background";
 
 interface IeditForm {
     projectId: string;
@@ -19,46 +20,51 @@ const EditForm: FC<IeditForm> = ({ projectId }) => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const isActive = useAppSelector((state) => state.isActive.valueModal);
     const dispatch = useAppDispatch();
-
-    let y: number | null = null;
-    let x: number | null = null;
-
-    const handleTouchStart = (e: any) => {
-        const firstTouch = e.touches[0];
-        y = firstTouch.clientY;
-        x = firstTouch.clientY;
+    const procedure_background = new Procedure_background({});
+    const [isDraggingSlide, setIsDraggingSlide] = useState(false);
+    const template = {
+        name: "Template",
+        background_color: "#333",
+        text_color: "red",
+        text_align: "center",
+        scheme: "",
+        background_type: "COLOR",
+        procedure_background,
+    };
+    const module = {
+        background_color: "white",
+        header_text: "string",
+        subheader_text: "string",
+        text_align: "string",
+        text_color: "string",
+        background_type: "COLOR",
+        procedure_background,
     };
 
-    const handleTouchMove = (e: any) => {
-        if (!y || !x) {
-            return false;
-        }
-
-        let y2 = e.touches[0].clientY;
-        let x2 = e.touches[0].clientY;
-        let yDiff = y2 - y;
-        let xDiff = x2 - x;
-
-        if (Math.abs(xDiff) > Math.abs(yDiff)) {
-            if (xDiff > 0) {
-                console.log("right");
-            } else {
-                console.log("left");
+    const slideEvents = (setIsDraggingSlide: (status: boolean) => void) => {
+        const onMouseDown = (e: any) => {
+            if (isActive) {
+                setIsDraggingSlide(true); // Устанавливаем флаг перетаскивания
+                handleStart(e);
             }
-        } else {
-            if (yDiff > 0) {
-                if (yDiff > 10) {
-                    dispatch(setActive(false));
-                    console.log("down");
-                }
-            } else {
-                console.log("top");
+        };
+        const onMouseUp = () => {
+            setIsDraggingSlide(false); // Сбрасываем флаг перетаскивания при отпускании
+            position.y = 0;
+        };
+        const onTouchStart = (e: any) => {
+            if (isActive) {
+                setIsDraggingSlide(true); // Устанавливаем флаг перетаскивания
+                handleStart(e);
             }
-        }
-        console.log(yDiff);
+        };
+        const onTouchEnd = () => {
+            setIsDraggingSlide(false); // Сбрасываем флаг перетаскивания при отпускании
+            position.y = 0;
+        };
+        const onClick = () => (position.y = 0);
 
-        x = null;
-        y = null;
+        return { onMouseDown, onMouseUp, onTouchStart, onTouchEnd, onClick };
     };
 
     const { position, isDragging, handleStart } = useDraggableBlock({
@@ -75,38 +81,10 @@ const EditForm: FC<IeditForm> = ({ projectId }) => {
     async function handleAdd() {
         position.y = 0;
 
-        const targetTemp = await postTemplateById(projectId, {
-            name: "troshkinBlock",
-            background_color: "#333",
-            text_color: "red",
-            text_align: "center",
-            scheme: "",
-            background_type: "COLOR",
-            procedure_background: {
-                background_color: "#ffffff",
-                blur: 5,
-                color: "#000000",
-                count: 3,
-                speed: 2,
-            },
-        });
-        if(activeIndex !== null){
-            for(let i = 0; i <= activeIndex ;i++){
-                await postModuleById(targetTemp, {
-                    background_color: "white",
-                    header_text: "string",
-                    subheader_text: "string",
-                    text_align: "string",
-                    text_color: "string",
-                    background_type: "COLOR",
-                    procedure_background: {
-                        background_color: "#ffffff",
-                        blur: 5,
-                        color: "#000000",
-                        count: 3,
-                        speed: 2,
-                    },
-                });
+        const targetTemp = await postTemplateById(projectId, template);
+        if (activeIndex !== null) {
+            for (let i = 0; i <= activeIndex; i++) {
+                await postModuleById(targetTemp, module);
             }
         }
         await get();
@@ -114,24 +92,6 @@ const EditForm: FC<IeditForm> = ({ projectId }) => {
         dispatch(setActive(!isActive));
     }
 
-    // async function addTemplate() {
-    //     await postTemplateById(projectId, {
-    //         name: "troshkinBlock",
-    //         background_color: "#333",
-    //         text_color: "red",
-    //         text_align: "center",
-    //         scheme: "",
-    //         background_type: "COLOR",
-    //         procedure_background: {
-    //             background_color: "#ffffff",
-    //             blur: 5,
-    //             color: "#000000",
-    //             count: 3,
-    //             speed: 2,
-    //         },
-    //     });
-    //     await get();
-    // }
     const templates = [
         [1],
         [1, 2],
@@ -143,22 +103,22 @@ const EditForm: FC<IeditForm> = ({ projectId }) => {
     return (
         <>
             <div
-                id="dropZone"
-                className={`absolute top-[30vh] w-full bg-white h-[70vh] z-50 transition-all duration-500 ${
+                className={`absolute bottom-0 flex flex-col w-full h-[100vh] z-50 transition-all duration-500 ${
                     isActive ? "" : "translate-y-full opacity-0"
                 }`}
-                onTouchStart={(e) => handleTouchStart(e)}
-                onTouchMove={(e) => handleTouchMove(e)}
             >
-                <div className="container">
-                    <Filter
-                        filterName={["Популярные", "Избранные", "Все", "Архив"]}
-                        setIndex={() => {}}
-                    />
-                    <div className="pt-4">
+                <div
+                    onClick={() => dispatch(setActive(!isActive))}
+                    className="flex-grow"
+                    id="dropZone"
+                ></div>
+                <div className="h-96 bg-white">
+                    <h2 className="text-2xl font-medium text-center pt-5">Формы</h2>
+                    <div className="top-[15%] relative">
+                        
                         <Swiper
                             spaceBetween={13}
-                            className="mySwiper overflow-visible  relative"
+                            className="mySwiper overflow-visible top-1/2  relative"
                             slidesPerView={1.5}
                             loop={true}
                             centeredSlides={true}
@@ -169,10 +129,8 @@ const EditForm: FC<IeditForm> = ({ projectId }) => {
                             }}
                             onSlideChange={(e) => setActiveIndex(e.realIndex)}
                         >
-                            {templates.map((_, i) => {
+                            {templates.map((template, i) => {
                                 const isActive = activeIndex === i;
-                                const [isDraggingSlide, setIsDraggingSlide] =
-                                    useState(false);
                                 return (
                                     <SwiperSlide
                                         key={i}
@@ -186,38 +144,16 @@ const EditForm: FC<IeditForm> = ({ projectId }) => {
                                                 ? "none"
                                                 : ".2s", // Применяем transition только при отпускании
                                         }}
-                                        onMouseDown={(e: any) => {
-                                            if (isActive) {
-                                                setIsDraggingSlide(true); // Устанавливаем флаг перетаскивания
-                                                handleStart(e);
-                                            }
-                                        }}
-                                        onMouseUp={() => {
-                                           
-                                            setIsDraggingSlide(false); // Сбрасываем флаг перетаскивания при отпускании
-                                            position.y = 0;
-                                        }}
-                                        onTouchStart={(e: any) => {
-                                            if (isActive) {
-                                                setIsDraggingSlide(true); // Устанавливаем флаг перетаскивания
-                                                handleStart(e);
-                                            }
-                                        }}
-                                        onTouchEnd={() => {
-                                            
-                                            setIsDraggingSlide(false); // Сбрасываем флаг перетаскивания при отпускании
-                                            position.y = 0;
-                                        }}
-                                        onClick={() => position.y = 0}
+                                        {...slideEvents(setIsDraggingSlide)}
                                     >
                                         <div
-                                            className={`p-[20px] bg-white rounded-[15px] grid grid-cols-3 grid-rows-2 gap-[10px] justify-center items-center transition-all duration-200 ${
+                                            className={`p-[20px]  shadow-inner bg-white rounded-[15px] grid grid-cols-3 grid-rows-2 gap-[10px] justify-center items-center transition-all duration-200 ${
                                                 isActive
-                                                    ? "scale-[1.2] shadow-inner"
+                                                    ? "scale-[1.2]"
                                                     : ""
                                             }`}
                                         >
-                                            {_.map(() => {
+                                            {template.map(() => {
                                                 return (
                                                     <div className="w-[45px] h-[45px] shadow-md bg-gradient-to-b shadow-[rgba(0,0,0,0.25)] from-[#9E9E9E] to-white"></div>
                                                 );
@@ -227,10 +163,6 @@ const EditForm: FC<IeditForm> = ({ projectId }) => {
                                 );
                             })}
                         </Swiper>
-                        <span className=" block pt-[40px] text-[16px] font-[600] opacity-60 text-center">
-                            Эта форма лучше всего подойдет для
-                        </span>
-                        <TwoBlockPreview h={"100px"} w={"100px"} />
                     </div>
 
                     <button

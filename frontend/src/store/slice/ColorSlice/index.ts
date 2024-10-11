@@ -1,12 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface openState {
-    ColorHex: any;
+    colorHex: any;
     opacity:string
 }
 
 const initialState: openState = {
-    ColorHex: null,
+    colorHex: null,
     opacity: "",
 };
 
@@ -17,7 +17,7 @@ export const colorSlice = createSlice({
     initialState,
     reducers: {
         setColor(state, action: PayloadAction<string>) {
-            state.ColorHex = action.payload;
+            state.colorHex = action.payload;
         },
         addOpacity(state, action: PayloadAction<string>) {
             state.opacity = action.payload;

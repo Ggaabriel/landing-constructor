@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import maskProject from "/maskProject.png";
 import "./projects.css";
@@ -38,12 +38,16 @@ const Projects: FC<IProjectProps> = ({
         }, 100);
     };
     const longPress = useLongPress(openModalWindow);
+    const swiperRef = useRef(null);
 
+    useEffect(()=>{
+        swiperRef.current.swiper.allowTouchMove = !modalStatus; 
+    },[modalStatus])
     return (
         <>
-
             <Swiper
-             style={{ transform: 'none' }}
+                ref={swiperRef}
+                style={{ transform: "none" }}
                 slidesPerView={"auto"}
                 spaceBetween={15}
                 className="mySwiper overflow-visible h-[50vh] pt-10"
@@ -63,20 +67,20 @@ const Projects: FC<IProjectProps> = ({
                 onInit={() => setActiveIndex(0)}
                 initialSlide={0}
             >
-                            {modalStatus && (
-                <SelectedBlock
-                    style={{
-                        marginTop: selectedImageWidth
-                            ? selectedImageWidth.margin
-                            : "" ?? "auto",
-                        width: selectedImageWidth.width,
-                        backgroundImage: `url(${maskProject})`,
-                    }}
-                    setModalStatus={setModalStatus}
-                    handleDeleteProject={handleDeleteProject}
-                    setActiveSlide={setActiveSlide}
-                />
-            )}
+                {modalStatus && (
+                    <SelectedBlock
+                        style={{
+                            marginTop: selectedImageWidth
+                                ? selectedImageWidth.margin
+                                : "" ?? "auto",
+                            width: selectedImageWidth.width,
+                            backgroundImage: `url(${maskProject})`,
+                        }}
+                        setModalStatus={setModalStatus}
+                        handleDeleteProject={handleDeleteProject}
+                        setActiveSlide={setActiveSlide}
+                    />
+                )}
                 {projects.map((item: any, i: number) => {
                     return (
                         <SwiperSlide

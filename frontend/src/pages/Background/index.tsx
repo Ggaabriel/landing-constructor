@@ -10,10 +10,11 @@ import Procedur from "./Procedur";
 import { patchTemplateById, postTemplateImg } from "@/src/axios";
 import { useParams } from "react-router-dom";
 import { SubmitButton } from "@/src/shared/Buttons/SubmitButton";
+import Procedure_background from "@/src/forms/procedure_background";
 
 const PageBackgroundEdit = () => {
     const [index, setIndex] = useState<number>(0);
-    const color = useAppSelector((state) => state.color.ColorHex);
+    const { colorHex } = useAppSelector((state) => state.color);
     const opacity = useAppSelector((state) => state.color.opacity);
     const [checked, setChecked] = useState<boolean>(false);
     const [value, setValue] = useState<number>(100);
@@ -41,32 +42,28 @@ const PageBackgroundEdit = () => {
         dispatch(setColor(value));
     };
 
-    const {
-        background,
-        blur,
-        color: procedurColor,
-        count,
-        speed,
-    } = useAppSelector((state) => state.protcedur);
+    const { background_color, blur, color, count, speed } = useAppSelector(
+        (state) => state.protcedur
+    );
 
     const updateTemplateProced = () => {
         if (id) {
             patchTemplateById(id, {
                 background_type: "PROCEDURE",
-                procedure_background: {
-                    background_color: background,
-                    color: procedurColor,
-                    count: count,
-                    blur: blur,
-                    speed: speed,
-                },
+                procedure_background: new Procedure_background({
+                    background_color,
+                    color,
+                    count,
+                    blur,
+                    speed,
+                }),
             });
         }
     };
     const updateTemplate = () => {
         if (id) {
             patchTemplateById(id, {
-                background_color: color+opacity,
+                background_color: colorHex + opacity,
                 background_type: "COLOR",
             });
         }
@@ -105,7 +102,7 @@ const PageBackgroundEdit = () => {
                 <>
                     <div
                         style={{
-                            background: index === 2 ? color + opacity : "",
+                            background: index === 2 ? colorHex + opacity : "",
                         }}
                         className="w-full h-[250px] flex justify-center items-center"
                     >
@@ -113,7 +110,7 @@ const PageBackgroundEdit = () => {
                     </div>
                     {/* Компонент паллетки */}
                     <PagePallete
-                        color={color}
+                        color={colorHex}
                         checked={checked}
                         setChecked={setChecked}
                         value={value}

@@ -55,50 +55,47 @@ const SelectedBlock: FC<ISelectedBlockProps> = ({
     // },[position])
     const [isEnter, setEnter] = useState(false);
     const detectTouch = (e) => {
-        if (+e.touches[0].clientY <= +style.marginTop) setEnter(true);
+        if (+e.changedTouches[0].clientY <= +style.marginTop && isDragging) setEnter(true);
         else setEnter(false);
     };
     const detectMouse = (e) => {
-        if (+e.clientY <= +style.marginTop) setEnter(true);
+        if (+e.clientY <= +style.marginTop && isDragging) setEnter(true);
         else setEnter(false);
-    };
-    const startTouch = () => {
-        document.addEventListener("touchmove", detectTouch);
-        document.addEventListener("mousemove", detectMouse);
-    };
-    const endTouch = () => {
-        document.removeEventListener("touchmove", detectTouch);
-        document.removeEventListener("mousemove", detectMouse);
     };
 
     return (
         <div
             ref={spawn}
-            onClick={() => {
-                setModalStatus(false);
-                setActiveSlide(false);
-            }}
-            className=" opacity-0 fixed top-0 left-0 h-screen w-full z-10 bg-[#53535359] backdrop-blur-sm transition"
+            className=" opacity-0 fixed top-0 z-10 left-0 h-screen w-full "
         >
-            {true && (
-                <div
-                    style={{
-                        height: style.marginTop,
-                        opacity: Math.abs(position.y) + "%",
-                    }}
-                    className="flex items-center justify-center absolute w-full bg-gradient-to-r whitespace-nowrap disabled:opacity-50 from-[#F55F5F] to-[#D4AEAE]"
-                >
-                    <img src={trash} className="h-20 w-20 " alt="" />
-                </div>
-            )}
             <div
+                onClick={() => {
+                    setModalStatus(false);
+                    setActiveSlide(false);
+                }}
+                className="w-full h-full absolute  bg-[#53535359] backdrop-blur-sm transition"
+            ></div>
+
+            <div
+                onClick={() => {
+                    setModalStatus(false);
+                    setActiveSlide(false);
+                }}
                 id="dropZone"
-                className="z-10 container overflow-visible transition-all h-full  "
+                style={{
+                    height: style.marginTop,
+                    opacity: Math.abs(position.y) + "%",
+                }}
+                className="flex items-center justify-center absolute w-full bg-gradient-to-r whitespace-nowrap disabled:opacity-50 from-[#F55F5F] to-[#D4AEAE]"
             >
+                <img src={trash} className="h-20 w-20 " alt="" />
+            </div>
+
+            <div className="z-10 container overflow-visible transition-all h-full  ">
                 <div className="w-auto">
                     <div
-                        onTouchEnd={endTouch}
-                        onMouseUp={endTouch}
+                        onTouchEnd={detectTouch}
+                        onMouseUp={detectMouse}
                         style={{
                             ...style,
                             position: "relative",
@@ -106,15 +103,15 @@ const SelectedBlock: FC<ISelectedBlockProps> = ({
                             cursor: isDragging ? "grabbing" : "grab",
                             zIndex: 100,
                         }}
-                        onMouseDown={(e)=>{
+                        onMouseDown={(e) => {
                             handleStart(e);
-                            startTouch(e)
                         }}
                         onTouchStart={(e) => {
                             handleStart(e);
-                            startTouch(e);
                         }}
-                        className=" bg-cover bg-center animate-shake select-none z-10 h-[50vh] mx-auto"
+                        onTouchMove={detectTouch}
+                        onMouseMove={detectMouse}
+                        className={`bg-cover bg-center animate-shake select-none z-10 h-[50vh] mx-auto ${!isDragging && " transition-all "}`}
                         onContextMenu={handleContextMenu}
                     >
                         <div
